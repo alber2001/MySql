@@ -12,7 +12,6 @@ Usuarios.create = (newUsuarios, result) => {
       result(err, null);
       return;
     }
-    //console.log("usuario creado: ", { id: res.insertId, ...newUsuarios });
     result(null, { id: res.insertId, ...newUsuarios });
   });
 };
@@ -52,5 +51,19 @@ Usuarios.delete = (id_usuario, result) => {
     result(null, res);
   });
 };
+
+Usuarios.login = (nombre_user, contrasena, result) => {
+  let query = `SELECT COUNT(nombre_user) as cuenta FROM usuarios WHERE nombre_user = '${nombre_user}' and contrasena = '${contrasena}'`;
+  mysql.query(query, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+    console.log("usuarios: ", res);
+    result(null, res);
+  });
+}
+
 
 module.exports = Usuarios;
