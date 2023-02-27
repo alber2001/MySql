@@ -1,4 +1,5 @@
 const mysql = require("../config/db.config");
+const bcrypt = require("bcryptjs");
 
 const Usuarios = function (usuarios) {
   this.nombre_user = usuarios.nombre_user;
@@ -52,16 +53,24 @@ Usuarios.delete = (id_usuario, result) => {
   });
 };
 
-Usuarios.login = (nombre_user, contrasena, result) => {
-  let query = `SELECT COUNT(nombre_user) as cuenta FROM usuarios WHERE nombre_user = '${nombre_user}' and contrasena = '${contrasena}'`;
+Usuarios.login = (nombre_user, password, result) => {
+  let query = `select * from usuarios where nombre_user = '${nombre_user}'`;
   mysql.query(query, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
       return;
+    } else if (!res.length) {
+      result('null');
+    } else {
+      bcrypt.compare(password, res[0].contrasena, function (err, result) {
+        if (err) {
+          console.log(err)
+        } else {
+          console.log(result);
+        }
+      });
     }
-    console.log("usuarios: ", res);
-    result(null, res);
   });
 }
 

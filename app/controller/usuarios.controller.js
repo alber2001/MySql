@@ -1,5 +1,5 @@
 const Usuarios = require("../models/usuarios.models");
-const bcrypt = require("bcryptjs");
+
 
 exports.create = function (req, res) {
   if (!req.body) {
@@ -65,46 +65,11 @@ exports.login = function (req, res) {
     });
   }
 
-  const usuario = new Usuarios({
-    nombre_user: req.body.nombre_user,
-    contrasena: req.body.contrasena,
+  Usuarios.login(req.body.nombre_user, req.body.contrasena, (err, data) => {
+    if (!data) {
+      res.status(406).send({ message: `USUARIO O CONTRASEÑA ERRONEOS` });
+    } else {
+      res.status(200).send({ message: `Usuario encontrado` });
+    }
   });
-
 };
-
-exports.login = (req, res) => {
-  const nombre_user = req.body.nombre_user;
-  const contrasena = req.body.contrasena;
-  bcrypt.genSalt(10, function (err, salt) {
-    if (err) throw err
-    bcrypt.hash(req.body.contrasena, salt, function (err, hash) {
-      const comparacion = hash;
-      console.log(comparacion);
-      // Usuarios.login(nombre_user, comparacion, (err, data) => {
-      //   if (err)
-      //     res.status(500).send({
-      //       message:
-      //         err.message || "Some error occurred while retrieving tutorials.",
-      //     });
-      //   else res.send(data);
-      // });
-    });
-  });
-  // Usuarios.login(nombre_user, contrasena, (err, data) => {
-  //   if (err)
-  //     res.status(500).send({
-  //       message:
-  //         err.message || "Some error occurred while retrieving tutorials.",
-  //     });
-  //   else res.send(data);
-  // });
-};
-
-
-
-//////COMENTARIOS/////
-//El usuario siempre debe ser unico, establecer unique en la tabla de la base de datos
-//se debe verifica con la consulta que el usuario no este actualmente ya ingresado en la base de datos.
-
-//Se tiene que crear una consulta que llame los datos de las persona para poder comparar
-//con bcrypt la contraseña de la base de datos junto con la contraseña enviada..
