@@ -1,5 +1,5 @@
 const Usuarios = require("../models/usuarios.models");
-
+const bcrypt = require("bcryptjs");
 
 exports.create = function (req, res) {
   if (!req.body) {
@@ -69,7 +69,7 @@ exports.login = function (req, res) {
     if (!data) {
       res.status(406).send({ message: `USUARIO O CONTRASEÑA ERRONEOS` });
     } else {
-      res.status(200).send({ message: `Usuario encontrado` });
+      res.status(200).send(data);
     }
   });
 };

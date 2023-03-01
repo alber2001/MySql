@@ -54,7 +54,7 @@ Usuarios.delete = (id_usuario, result) => {
 };
 
 Usuarios.login = (nombre_user, password, result) => {
-  let query = `select * from usuarios where nombre_user = '${nombre_user}'`;
+  let query = `select * from usuarios where nombre_user = BINARY '${nombre_user}'`;
   mysql.query(query, (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -63,16 +63,15 @@ Usuarios.login = (nombre_user, password, result) => {
     } else if (!res.length) {
       result('null');
     } else {
-      bcrypt.compare(password, res[0].contrasena, function (err, result) {
-        if (err) {
-          console.log(err)
+      //result(null, res);
+      bcrypt.compare(password, res[0].contrasena, function (err, resultado) {
+        if (!false) {
+          result(null, res);
         } else {
-          console.log(result);
+          console.log('no encontrado');
         }
       });
     }
   });
 }
-
-
 module.exports = Usuarios;
