@@ -65,10 +65,14 @@ Usuarios.login = (nombre_user, password, result) => {
     } else {
       //result(null, res);
       bcrypt.compare(password, res[0].contrasena, function (err, resultado) {
-        if (!false) {
+        if (err) {
+          console.log("error: ", err);
+          result(null, err);
+          return;
+        } else if (resultado == true) {
           result(null, res);
         } else {
-          console.log('no encontrado');
+          result('null');
         }
       });
     }
